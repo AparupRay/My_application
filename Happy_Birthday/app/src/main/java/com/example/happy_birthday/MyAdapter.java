@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<ListItem> listItems;
     private Context context;
 
-    public MyAdpater(List<ListItem> listItems, Context context) {
+    public MyAdapter(List<ListItem> listItems, Context context) {
 
         this.listItems = listItems;
         this.context = context;

@@ -2,23 +2,24 @@ package com.example.happy_birthday;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -44,12 +45,12 @@ public class schedule extends AppCompatActivity implements DatePickerDialog.OnDa
         toolbar.setTitle("SEND WISHES");
         setSupportActionBar(toolbar);
 
-        current_date = (TextView) findViewById(R.id.current_date);
+        current_date = findViewById(R.id.current_date);
         Calendar calendar = Calendar.getInstance();
         String Currentdate = DateFormat.getDateInstance().format(calendar.getTime());
         current_date.setText("Today's Date - "+ Currentdate);
 
-        calender_date = (ImageView)findViewById(R.id.calender_date);
+        calender_date = findViewById(R.id.calender_date);
 
         calender_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +63,7 @@ public class schedule extends AppCompatActivity implements DatePickerDialog.OnDa
         });
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         recyclerView.setHasFixedSize(true);
 
@@ -77,7 +78,7 @@ public class schedule extends AppCompatActivity implements DatePickerDialog.OnDa
             listItems.add(listItem);
         }
 
-        adapter = new MyAdpater(listItems,this);
+        adapter = new MyAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
 
 
@@ -109,9 +110,16 @@ public class schedule extends AppCompatActivity implements DatePickerDialog.OnDa
 
             case R.id.user:
 
-                Intent schedule = new Intent(getApplicationContext(),Login.class);
-                startActivity(schedule);
-                finish();
+                Login.googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //On Successful sign out we navigate the user back to LoginActivity
+                        Intent intent=new Intent(getApplicationContext(),Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+                break;
 
         }
         return super.onOptionsItemSelected(item);
